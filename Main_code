@@ -1,0 +1,37 @@
+# Load necessary libraries
+install.packages("psych")
+install.packages("ggplot2")
+install.packages("tidyverse")
+library(psych)
+library(ggplot2)
+library(tidyverse)
+
+# Load the data
+hc <- read.csv("WorldHappiness_Corruption_2015_2020.csv", stringsAsFactors = F)
+
+# Basic descriptive statistics
+describe(hc)
+
+# Histograms & Boxplots for happiness_score and cpi_score
+ggplot(hc, aes(x=happiness_score)) + geom_histogram() + geom_boxplot(aes(y=happiness_score), width=0.1)
+ggplot(hc, aes(x=cpi_score)) + geom_histogram() + geom_boxplot(aes(y=cpi_score), width=0.1)
+
+# Correlation Test
+correlation_test <- cor.test(hc$cpi_score, hc$happiness_score)
+print(correlation_test)
+
+# Linear Regression Model 1
+model1 <- lm(happiness_score ~ . - Country, data=hc)
+summary(model1)
+
+# Linear Regression Model 2
+model2 <- lm(happiness_score ~ . - Country - Continent, data=hc)
+summary(model2)
+
+# Linear Regression Model 3
+model3 <- lm(happiness_score ~ . - Country - Continent - Government_Corruption.Trust, data=hc)
+summary(model3)
+
+# Linear Regression Model 4
+model4 <- lm(happiness_score ~ cpi_score, data=hc)
+summary(model4)
